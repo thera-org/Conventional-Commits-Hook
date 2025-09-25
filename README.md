@@ -33,11 +33,11 @@ Para usar o comando `conventional-commit` de qualquer lugar:
    ```bash
    # Para diretório padrão do usuário (Linux/macOS)
    mkdir -p ~/.local/bin
-   mv cc-hook ~/.local/bin/
+   cp cc-hook ~/.local/bin/
    chmod +x ~/.local/bin/cc-hook
-   
+
    # OU para diretório global (requer sudo)
-   sudo mv cc-hook /usr/local/bin/
+   sudo cp cc-hook /usr/local/bin/
    sudo chmod +x /usr/local/bin/cc-hook
    ```
 
@@ -45,7 +45,7 @@ Para usar o comando `conventional-commit` de qualquer lugar:
    ```bash
    # Verifique se ~/.local/bin está no PATH
    echo $PATH | grep -q "$HOME/.local/bin" && echo "✅ PATH configurado" || echo "❌ Precisa configurar PATH"
-   
+
    # Se necessário, adicione ao seu ~/.bashrc ou ~/.zshrc:
    echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
    source ~/.bashrc
@@ -182,7 +182,7 @@ cp .git/hooks/commit-msg.backup.TIMESTAMP .git/hooks/commit-msg
 ## 🌍 Compatibilidade
 
 - ✅ Linux
-- ✅ macOS  
+- ✅ macOS
 - ✅ Windows (Git Bash, WSL)
 - ✅ Todas as versões do Git
 
