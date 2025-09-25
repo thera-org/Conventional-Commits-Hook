@@ -26,7 +26,7 @@ Para usar o comando `conventional-commit` de qualquer lugar:
 
 1. **Baixe o script:**
    ```bash
-   curl -o cc-hook https://raw.githubusercontent.com/seu-usuario/conventional-commit-hook/main/cc-hook
+   curl -o cc-hook https://raw.githubusercontent.com/thera-org/Conventional-Commits-Hook/main/cc-hook
    ```
 
 2. **Mova para o diretório de scripts pessoais:**
@@ -63,7 +63,7 @@ Para uso apenas no projeto atual:
 
 1. **Baixe o script no projeto:**
    ```bash
-   curl -o cc-hook https://raw.githubusercontent.com/seu-usuario/conventional-commit-hook/main/cc-hook
+   curl -o cc-hook https://raw.githubusercontent.com/thera-org/Conventional-Commits-Hook/main/cc-hook
    chmod +x cc-hook
    ```
 
