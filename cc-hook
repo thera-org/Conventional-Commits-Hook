@@ -29,8 +29,17 @@ print_info() {
     echo -e "${BLUE}INFO:${NC} $1"
 }
 
-# Verifica se o diretório atual é um repositório git
-if [ ! -d ".git" ]; then
+# Verifica se o usuário possui um diretório git na área de trabalho atual
+GIT_DIR=""
+while [[ "$(pwd)" != "$HOME" ]]; do
+    if [[ -d ".git" ]]; then
+      GIT_DIR="$(pwd)"
+      break
+    fi
+    cd ..
+done
+
+if [ -z "$GIT_DIR" ]; then
     print_error "Este diretório não é um repositório Git (não existe a pasta .git)."
     echo
     echo "Para inicializar um repositório Git, execute:"
@@ -39,7 +48,7 @@ if [ ! -d ".git" ]; then
 fi
 
 # Caminho para a pasta de hooks
-HOOKS_DIR=".git/hooks"
+HOOKS_DIR="$GIT_DIR/.git/hooks"
 HOOK_FILE="$HOOKS_DIR/commit-msg"
 
 # Verifica se já existe um hook commit-msg
