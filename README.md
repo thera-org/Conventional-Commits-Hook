@@ -1,4 +1,4 @@
-# Conventional Commits Hook
+# CC Hook - Conventional Commits Hook
 
 Um script shell simples e eficiente para configurar automaticamente um git hook que valida mensagens de commit seguindo o padrão [Conventional Commits](https://www.conventionalcommits.org/).
 
@@ -26,19 +26,19 @@ Para usar o comando `conventional-commit` de qualquer lugar:
 
 1. **Baixe o script:**
    ```bash
-   curl -o conventional-commit https://raw.githubusercontent.com/seu-usuario/conventional-commit-hook/main/conventional-commit
+   curl -o cc-hook https://raw.githubusercontent.com/seu-usuario/conventional-commit-hook/main/cc-hook
    ```
 
 2. **Mova para o diretório de scripts pessoais:**
    ```bash
    # Para diretório padrão do usuário (Linux/macOS)
    mkdir -p ~/.local/bin
-   mv conventional-commit ~/.local/bin/
-   chmod +x ~/.local/bin/conventional-commit
+   mv cc-hook ~/.local/bin/
+   chmod +x ~/.local/bin/cc-hook
    
    # OU para diretório global (requer sudo)
-   sudo mv conventional-commit /usr/local/bin/
-   sudo chmod +x /usr/local/bin/conventional-commit
+   sudo mv cc-hook /usr/local/bin/
+   sudo chmod +x /usr/local/bin/cc-hook
    ```
 
 3. **Certifique-se que o diretório está no PATH:**
@@ -54,7 +54,7 @@ Para usar o comando `conventional-commit` de qualquer lugar:
 4. **Use o comando de qualquer repositório:**
    ```bash
    cd meu-projeto
-   conventional-commit
+   cc-hook
    ```
 
 ### Opção 2: Instalação Local
@@ -63,13 +63,13 @@ Para uso apenas no projeto atual:
 
 1. **Baixe o script no projeto:**
    ```bash
-   curl -o conventional-commit https://raw.githubusercontent.com/seu-usuario/conventional-commit-hook/main/conventional-commit
-   chmod +x conventional-commit
+   curl -o cc-hook https://raw.githubusercontent.com/seu-usuario/conventional-commit-hook/main/cc-hook
+   chmod +x cc-hook
    ```
 
 2. **Execute o script:**
    ```bash
-   ./conventional-commit
+   ./cc-hook
    ```
 
 ### 📁 Diretórios comuns para scripts:
@@ -221,7 +221,7 @@ R: Hooks não são versionados pelo Git, então cada colaborador precisa executa
 R: Sim, o script é totalmente local e não envia dados para nenhum servidor.
 
 ### P: Como verifico se o comando está disponível globalmente?
-R: Execute `which conventional-commit` ou `conventional-commit --help` para verificar se está no PATH.
+R: Execute `which cc-hook` ou `cc-hook --help` para verificar se está no PATH.
 
 ### P: O que fazer se o comando não for encontrado?
 R: Verifique se o diretório está no PATH e se o arquivo tem permissão de execução (`chmod +x`).
