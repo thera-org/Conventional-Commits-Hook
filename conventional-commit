@@ -1,0 +1,146 @@
+#!/usr/bin/env bash
+
+# Script para configurar hook de Conventional Commits
+# Uso: ./conventional-commit
+
+set -e  # Para o script se houver erro
+
+# Cores para output mais amigável
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Função para exibir mensagens coloridas
+print_error() {
+    echo -e "${RED}ERRO:${NC} $1"
+}
+
+print_success() {
+    echo -e "${GREEN}SUCESSO:${NC} $1"
+}
+
+print_warning() {
+    echo -e "${YELLOW}AVISO:${NC} $1"
+}
+
+print_info() {
+    echo -e "${BLUE}INFO:${NC} $1"
+}
+
+# Verifica se o diretório atual é um repositório git
+if [ ! -d ".git" ]; then
+    print_error "Este diretório não é um repositório Git (não existe a pasta .git)."
+    echo
+    echo "Para inicializar um repositório Git, execute:"
+    echo "  git init"
+    exit 1
+fi
+
+# Caminho para a pasta de hooks
+HOOKS_DIR=".git/hooks"
+HOOK_FILE="$HOOKS_DIR/commit-msg"
+
+# Verifica se já existe um hook commit-msg
+if [ -f "$HOOK_FILE" ]; then
+    print_warning "Já existe um hook commit-msg."
+    read -p "Deseja sobrescrever? (y/N): " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        print_info "Operação cancelada."
+        exit 0
+    fi
+    # Faz backup do hook existente
+    cp "$HOOK_FILE" "$HOOK_FILE.backup.$(date +%Y%m%d_%H%M%S)"
+    print_info "Backup criado: $HOOK_FILE.backup.$(date +%Y%m%d_%H%M%S)"
+fi
+
+# Cria o diretório hooks caso não exista
+mkdir -p "$HOOKS_DIR"
+
+# Cria o arquivo commit-msg com o conteúdo desejado
+cat > "$HOOK_FILE" << 'EOF'
+#!/usr/bin/env bash
+
+# Hook para validar Conventional Commits
+# Gerado automaticamente pelo script conventional-commit
+
+# Path to the commit message file (provided by Git)
+COMMIT_MSG_FILE=$1
+
+# Read the commit message from the file
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+# Remove leading/trailing whitespace
+COMMIT_MSG=$(echo "$COMMIT_MSG" | xargs)
+
+# Skip empty commits
+if [ -z "$COMMIT_MSG" ]; then
+    echo "ERRO: Mensagem de commit vazia."
+    exit 1
+fi
+
+# Skip merge commits, revert commits, and initial commits
+if [[ $COMMIT_MSG =~ ^Merge\ branch|^Revert|^Initial\ commit ]]; then
+    exit 0
+fi
+
+# Conventional Commits regex pattern
+# Matches: type(scope): description
+# Optional: breaking change indicator (!)
+CONVENTIONAL_COMMIT_REGEX='^(feat|fix|docs|style|refactor|test|chore|build|ci|perf|revert)(\([a-zA-Z0-9_.-]+\))?(!)?:\s+.{1,}$'
+
+# Check if the commit message matches the regex
+if ! [[ $COMMIT_MSG =~ $CONVENTIONAL_COMMIT_REGEX ]]; then
+    echo "❌ ERRO: A mensagem de commit não segue o formato do Conventional Commits."
+    echo
+    echo "📝 Formato obrigatório:"
+    echo "   <tipo>(<escopo opcional>): <descrição>"
+    echo
+    echo "🏷️  Tipos válidos:"
+    echo "   feat     - Nova funcionalidade"
+    echo "   fix      - Correção de bug"
+    echo "   docs     - Alterações na documentação"
+    echo "   style    - Formatação, espaços, etc. (sem mudança de código)"
+    echo "   refactor - Refatoração (sem nova funcionalidade ou correção)"
+    echo "   test     - Adicionar ou modificar testes"
+    echo "   chore    - Manutenção geral (dependências, ferramentas)"
+    echo "   build    - Sistema de build ou dependências externas"
+    echo "   ci       - Configuração de CI/CD"
+    echo "   perf     - Melhoria de performance"
+    echo "   revert   - Reverter commit anterior"
+    echo
+    echo "✨ Exemplos válidos:"
+    echo "   feat(auth): adicionar autenticação JWT"
+    echo "   fix(api): corrigir timeout na requisição"
+    echo "   docs: atualizar README com instruções"
+    echo "   style(components): ajustar indentação"
+    echo "   feat!: mudança que quebra compatibilidade"
+    echo
+    echo "❌ Sua mensagem:"
+    echo "   \"$COMMIT_MSG\""
+    echo
+    exit 1
+fi
+
+# Success - commit message is valid
+exit 0
+EOF
+
+# Dá permissão de execução
+chmod +x "$HOOK_FILE"
+
+print_success "Hook commit-msg configurado com sucesso!"
+echo
+print_info "O hook foi instalado em: $HOOK_FILE"
+echo
+echo "🎯 A partir de agora, todos os commits deste repositório serão validados"
+echo "   automaticamente para seguir o padrão Conventional Commits."
+echo
+echo "💡 Para testar o hook, faça um commit:"
+echo "   git add ."
+echo "   git commit -m \"feat: adicionar nova funcionalidade\""
+echo
+echo "🔧 Para remover o hook, execute:"
+echo "   rm $HOOK_FILE"
